@@ -132,8 +132,8 @@ function renameSaveAs(beforePath, afterPath, beforeSuffix, afterSuffix) {
 // var afterSuffix = '.md.txt';
 // renameSaveAs(beforePath, afterPath, beforeSuffix, afterSuffix);
 
-var beforePath = './test/fixtures';
-var afterPath = './test/expected';
-var beforeSuffix = '.md.txt';
-var afterSuffix = '.md';
-renameSaveAs(beforePath, afterPath, beforeSuffix, afterSuffix);
+// var beforePath = './test/fixtures';
+// var afterPath = './test/expected';
+// var beforeSuffix = '.md.txt';
+// var afterSuffix = '.md';
+// renameSaveAs(beforePath, afterPath, beforeSuffix, afterSuffix);
