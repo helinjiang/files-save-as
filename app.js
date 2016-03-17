@@ -4,8 +4,7 @@ var walkSync = require('walk-sync');
 var path = require('path');
 var mkdirp = require('mkdirp');
 
-//https://www.npmjs.com/package/to-markdown
-var toMarkdown = require('to-markdown');
+var html2md = require('./lib/html2md');
 
 
 /**
@@ -39,49 +38,53 @@ function walk(paths, callback) {
     });
 }
 
-
-var oldPath = 'G:/991.git/oschina/local-html-project/api/javascript2';
-var newPath = 'D:/code/data/javascript';
-
-
-
-mkdirp(newPath, function(err) {
-    if (err) {
-        console.error('mkdirp error: ', err);
-        return;
-    }
-
-    console.log('newPath reasy!');
-
-    walk(oldPath, function(item) {
-        // console.log(item);
-        var filePath = path.join(item.basePath, item.relativePath);
-        var content = fs.readFileSync(filePath, 'utf8');
-        // console.log(content);
-
-        var reg = /<!--\[(.*)\]-->/;
-        var regResult = content.match(reg);
-        var saveFileName;
-        if (regResult && regResult.length > 1) {
-            saveFileName = JSON.parse(regResult[1]).title;
-        } else {
-            saveFileName = path.basename(filePath, '.html');
+function htmlSaveAsMd(htmlPath, mdPath) {
+    // 需要处理mdPath，因为可能它不存在
+    mkdirp(mdPath, function(err) {
+        if (err) {
+            console.error('mkdirp error: ', err);
+            return;
         }
-        saveFileName = saveFileName + '.md.txt';
-        console.log(saveFileName);
 
-        console.log(toMarkdown(content, {
-            gfm: true,
-            converters: [{
-                filter: 'li',
-                replacement: function(content) {
-                    return '- ' + content;
+        // 遍历htmlPath，逐一处理所有的文件
+        walk(htmlPath, function(item) {
+            // 获取文件内容
+            // console.log(item);
+            var filePath = path.join(item.basePath, item.relativePath);
+            var content = fs.readFileSync(filePath, 'utf8');
+            // console.log(content);
+
+            // 获取要保存的文件名
+            var reg = /<!--\[(.*)\]-->/,
+                regResult = content.match(reg),
+                saveFileName;
+            if (regResult && regResult.length > 1) {
+                saveFileName = JSON.parse(regResult[1]).title;
+            } else {
+                saveFileName = path.basename(filePath, '.html');
+            }
+
+            // 增加后缀
+            saveFileName = saveFileName + '.md';
+
+            // 将html转换为md
+            var mdContent = html2md.convert(content);
+            // console.log(mdContent);
+
+            // 保存
+            var mdSavePath = path.join(mdPath, saveFileName);
+            fs.writeFile(mdSavePath, mdContent, (err) => {
+                if (err) {
+                    throw err;
                 }
-            }]
-        }));
-
-        // TODO toMarkdown对pre处理不好，需要第二次转义。如果第一次就强制转的话，会导致code不会被转义
-        // 渲染的表格有问题，
-
+                console.log(mdSavePath + ' saved!');
+            });
+        });
     });
-});
+}
+
+
+//----test-----
+var htmlPath = './test/fixtures';
+var mdPath = './test/expected';
+htmlSaveAsMd(htmlPath, mdPath);

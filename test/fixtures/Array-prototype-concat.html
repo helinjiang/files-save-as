@@ -1,0 +1,50 @@
+<!--[{"title":"Array.prototype.concat()","keywords":"","description":"","lastmodify":"2015-10-28"}]-->
+<p><code>Array.prototype.concat()</code> 方法用于将传入的数组或非数组值与原数组合并，组成一个新的数组并返回。</p>
+<div class="note note-info">
+    <p>该方法不会改变原数组，而会返回一个新数组。</p>
+</div>
+<p>ddd</p>
+<div class="note note-warning">
+    <p>该方法不会改变原数组，而会返回一个新数组。</p>
+</div>
+<h2>定义和用法</h2>
+<h3>语法</h3>
+<pre>arrayObject.concat(value1, value2, ..., valueN)</pre>
+<table class="table table-bordered">
+    <tbody>
+        <tr>
+            <th>参数</th>
+            <th>描述</th>
+        </tr>
+        <tr>
+            <td><i>valueN</i></td>
+            <td>需要与原数组合并的数组或非数组值</td>
+        </tr>
+    </tbody>
+</table>
+<h3>返回值</h3>
+<p>返回一个新的数组。该数组是通过把所有 <code>valueN</code> 参数添加到 <code>arrayObject</code> 中生成的。</p>
+<h3>说明</h3>
+<p><code>concat()</code> 方法并不修改调用它的对象(<code>this</code> 指向的对象) 和参数中的各个数组本身的值，而是将他们的每个元素拷贝一份放在组合成的新数组中。</p>
+<p>对新数组的任何操作都不会对原数组产生影响，反之亦然。</p>
+<p>原数组中的元素有两种被拷贝的方式：</p>
+<ol>
+    <li>字符串和数字(是原始值，而不是包装原始值的 <code>String</code> 和 <code>Number</code> 对象)：<code>concat()</code> 方法会复制字符串和数字的值放到新数组里;</li>
+    <li>对象引用(非对象直接量)：<code>concat()</code>方法会复制对象引用放到组合的新数组里,原数组和新数组中的对象引用都指向同一个实际的对象，所以，当实际的对象被修改时，两个数组也同时会被修改。</li>
+</ol>
+<h2>实例</h2>
+<h3>例子 1：参数为元素</h3>
+<p>在本例中，我们将把 <code>concat()</code>中的参数连接到数组 <code>a</code> 中：</p>
+<pre>
+<code class="language-javascript">
+    var a = [1,2,3];
+    var result = a.concat(4,5);
+
+    console.log(a);  // [1, 2, 3] ，注意，数组a的值并没有发生改变！
+    console.log(result);  // [1, 2, 3, 4, 5] 
+</code></pre>
+<h2>更多</h2>
+<ul class="api-ref-more">
+    <li><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/concat" rel="nofollow" target="_blank">Array.prototype.concat()</a></li>
+    <li><a href="http://www.w3school.com.cn/jsref/jsref_concat_array.asp" rel="nofollow" target="_blank">JavaScript concat() 方法</a></li>
+</ul>
