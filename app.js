@@ -48,11 +48,11 @@ function htmlSaveAsMd(htmlPath, mdPath) {
 
         // 遍历htmlPath，逐一处理所有的文件
         walk(htmlPath, function(item) {
-            // 获取文件内容
-            // console.log(item);
+            // 获取文件路径
             var filePath = path.join(item.basePath, item.relativePath);
+
+            // 获取文件内容
             var content = fs.readFileSync(filePath, 'utf8');
-            // console.log(content);
 
             // 获取要保存的文件名
             var reg = /<!--\[(.*)\]-->/,
@@ -69,7 +69,6 @@ function htmlSaveAsMd(htmlPath, mdPath) {
 
             // 将html转换为md
             var mdContent = html2md.convert(content);
-            // console.log(mdContent);
 
             // 保存
             var mdSavePath = path.join(mdPath, saveFileName);
@@ -83,8 +82,58 @@ function htmlSaveAsMd(htmlPath, mdPath) {
     });
 }
 
+function renameSaveAs(beforePath, afterPath, beforeSuffix, afterSuffix) {
+    // 需要处理afterPath，因为可能它不存在
+    mkdirp(afterPath, function(err) {
+        if (err) {
+            console.error('mkdirp error: ', err);
+            return;
+        }
+
+        // 遍历beforePath，逐一处理所有的文件
+        walk(beforePath, function(item) {
+            var purName = path.basename(item.relativePath, beforeSuffix);
+   
+            // 通过指定后缀查找结果不和本身相同时，才处理
+            if (purName !== item.relativePath) {
+                // 获取文件路径
+                var filePath = path.join(item.basePath, item.relativePath);
+
+                // 获取文件内容
+                var content = fs.readFileSync(filePath, 'utf8');
+
+                // 获取要保存的文件名
+                var saveFileName = purName + afterSuffix;
+
+                // 保存
+                var afterSavePath = path.join(afterPath, saveFileName);
+                fs.writeFile(afterSavePath, content, (err) => {
+                    if (err) {
+                        throw err;
+                    }
+                    console.log(filePath + ' saved as ' + afterSavePath);
+                });
+            }
+
+        });
+    });
+}
+
 
 //----test-----
-var htmlPath = './test/fixtures';
-var mdPath = './test/expected';
-htmlSaveAsMd(htmlPath, mdPath);
+// var htmlPath = './test/fixtures';
+// var mdPath = './test/expected';
+// htmlSaveAsMd(htmlPath, mdPath);
+
+
+// var beforePath = './test/fixtures';
+// var afterPath = './test/expected';
+// var beforeSuffix = '.md';
+// var afterSuffix = '.md.txt';
+// renameSaveAs(beforePath, afterPath, beforeSuffix, afterSuffix);
+
+var beforePath = './test/fixtures';
+var afterPath = './test/expected';
+var beforeSuffix = '.md.txt';
+var afterSuffix = '.md';
+renameSaveAs(beforePath, afterPath, beforeSuffix, afterSuffix);
