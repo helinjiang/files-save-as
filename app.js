@@ -100,7 +100,8 @@ function renameSaveAs(beforePath, afterPath, beforeSuffix, afterSuffix) {
                 var filePath = path.join(item.basePath, item.relativePath);
 
                 // 获取文件内容
-                var content = fs.readFileSync(filePath, 'utf8');
+                //var content = fs.readFileSync(filePath, 'utf8');
+                var content = fs.readFileSync(filePath);
 
                 // 获取要保存的文件名
                 var saveFileName = purName + afterSuffix;
